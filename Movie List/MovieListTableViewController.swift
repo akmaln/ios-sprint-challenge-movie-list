@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MovieListTableViewController: UITableViewController {
+class MovieListTableViewController: UIViewController, UITableViewDataSource {
 
     @IBOutlet weak var movieTableView: UITableView!
     
@@ -17,13 +17,6 @@ class MovieListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
         movieTableView.dataSource = self
     }
     
@@ -31,22 +24,20 @@ class MovieListTableViewController: UITableViewController {
     if segue.identifier == "ShowNewMovie" {
     
     guard let newMovieVC = segue.destination as? AddMovieViewController else { return }
-    
-        
-        newMovieVC.delegate = self as? NewMovieDelegate 
+        newMovieVC.delegate = self
         }
         
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count
     }
 
    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as? MoviesTableViewCell else { fatalError("cell is not a MoviesATableViewCell")}
 
         let movie = movies[indexPath.row]
-        cell.movieLabel.text = movie.movieTitle
+        cell.movie = movie
 
         return cell
     }
@@ -57,6 +48,6 @@ extension MovieListTableViewController: NewMovieDelegate {
         movies.append(movie)
         movieTableView.reloadData()
     }
-    
-    
 }
+
+

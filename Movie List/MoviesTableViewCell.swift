@@ -8,21 +8,34 @@
 
 import UIKit
 
+protocol MovieCellDelegate {
+    func cellWasTapped()
+}
+
 class MoviesTableViewCell: UITableViewCell {
     @IBOutlet weak var movieLabel: UILabel!
+    @IBOutlet weak var seenButton: UIButton!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    var delegate: MovieCellDelegate?
+    var movie: Movie? {
+        didSet {
+            updateViews()
+        }
     }
     @IBAction func seenUnseenButton(_ sender: Any) {
+        movie!.seenUnseen = !movie!.seenUnseen
         
+        delegate?.cellWasTapped() 
     }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func updateViews() {
+        guard let movie = movie else { return }
+        
+        movieLabel.text = movie.movieTitle
+        
+        if movie.seenUnseen == true {
+            seenButton.setTitle("Seen", for: .normal)
+        } else {
+            seenButton.setTitle("Unseen", for: .normal)
+        }
     }
-
 }
